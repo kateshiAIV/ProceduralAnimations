@@ -1,9 +1,17 @@
 #include <SFML/Graphics.hpp>
+#include "Segment.h"
+#include "Creature.h"
+
 
 int main()
 {
+	Creature creature;
+
+
+
     auto window = sf::RenderWindow(sf::VideoMode({1920u, 1080u}), "CMake SFML Project");
     window.setFramerateLimit(144);
+
 
     while (window.isOpen())
     {
@@ -13,9 +21,13 @@ int main()
             {
                 window.close();
             }
+
         }
 
+
+
         window.clear();
+        creature.draw(window);
         window.display();
     }
 }
