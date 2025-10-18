@@ -26,14 +26,6 @@ Segment::Segment(const sf::Vector2f& position, float angle, float distance, floa
     point2 = m_Position + dir * m_Radius; 
 }
 
-sf::Vector2f Segment::getEndPosition() const
-{
-    float radianAngle = m_Angle * 3.14159265f / 180.0f;
-    return sf::Vector2f(
-        m_Position.x + m_Distance * std::cos(radianAngle),
-        m_Position.y + m_Distance * std::sin(radianAngle)
-    );
-}
 
 void Segment::draw(sf::RenderWindow& window) const
 {
@@ -50,19 +42,7 @@ void Segment::draw(sf::RenderWindow& window) const
     window.draw(arrow);
 }
 
-void Segment::addOffsetRotation(float offset)
-{
-    m_Angle += offset;
-    if (m_Angle >= 360.f)
-        m_Angle -= 360.f;
-    else if (m_Angle < 0.f)
-        m_Angle += 360.f;
-    float radianAngle = m_Angle * 3.14159265f / 180.0f;
-    sf::Vector2f dir(std::cos(radianAngle), std::sin(radianAngle));
 
-    point1 = m_Position;
-    point2 = m_Position + dir * m_Radius;
-}
 
 sf::Vector2f Segment::getPosition() const
 {

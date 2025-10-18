@@ -22,9 +22,7 @@ private:
 public:
 	Segment() = default;
     Segment(const sf::Vector2f& position, float angle, float distance, float radius, const sf::Color& color);
-    sf::Vector2f getEndPosition() const;
     void draw(sf::RenderWindow& window) const;
-    void addOffsetRotation(float offset);
     sf::Vector2f  getPosition() const;
 	void setPosition(const sf::Vector2f& position);
 	void setDesiredPosition(const sf::Vector2f& desiredPosition);
