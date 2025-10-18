@@ -4,14 +4,14 @@
 
 Creature::Creature()
     : m_Body{
-        Segment({0.0f, 0.0f}, 0.0f, 0.0f, 0.0f, sf::Color::White),
-        Segment({0.0f, 0.0f}, 0.0f, 0.0f, 0.0f, sf::Color::White),
-        Segment({0.0f, 0.0f}, 0.0f, 0.0f, 0.0f, sf::Color::White),
-        Segment({0.0f, 0.0f}, 0.0f, 0.0f, 0.0f, sf::Color::White),
-        Segment({0.0f, 0.0f}, 0.0f, 0.0f, 0.0f, sf::Color::White),
-        Segment({0.0f, 0.0f}, 0.0f, 0.0f, 0.0f, sf::Color::White),
-        Segment({0.0f, 0.0f}, 0.0f, 0.0f, 0.0f, sf::Color::White),
-        Segment({0.0f, 0.0f}, 0.0f, 0.0f, 0.0f, sf::Color::White)
+        Segment(),
+        Segment(),
+        Segment(),
+        Segment(),
+        Segment(),
+        Segment(),
+        Segment(),
+        Segment()
     }
 {
     float r1 = 50.0f;
@@ -43,5 +43,26 @@ void Creature::draw(sf::RenderWindow& window) const
     for (const auto& segment : m_Body)
     {
         segment.draw(window);
+    }
+}
+
+
+void Creature::setDesiredPosition(const sf::Vector2f& desiredPosition)
+{
+    m_DesiredPosition = desiredPosition;
+}
+
+
+void Creature::update()
+{
+    if (m_Body.empty()) { return; };
+
+    m_Body[0].setDesiredPosition(m_DesiredPosition);
+    m_Body[0].update();
+
+    for (size_t i = 1; i < m_Body.size(); ++i)
+    {
+        m_Body[i].setDesiredPosition(m_Body[i - 1].getPosition());
+        m_Body[i].update();
     }
 }
