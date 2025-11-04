@@ -62,7 +62,7 @@ void Creature::update(float time)
 
     for (size_t i = 1; i < m_Body.size(); ++i)
     {
-        m_Body[i].setDesiredPosition(m_Body[i - 1].getPosition());
+        m_Body[i].setDesiredPosition(m_Body[i - 1].getChildDesiredPosition());
         m_Body[i].update(m_Body[i-1], time);
     }
 }

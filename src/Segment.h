@@ -18,6 +18,7 @@ private:
     sf::Vector2f point2 = m_Position; 
     sf::Vector2f helppoint0 = m_Position;
     sf::Vector2f helppoint1 = m_Position;
+	sf::Vector2f ChildDesiredPosition = m_Position;
     sf::ConvexShape convex;
     
 
@@ -33,4 +34,5 @@ public:
 	void update(Segment parentSegment, float time);
     sf::Vector2f getHelpPoint0();
     sf::Vector2f getHelpPoint1();
+    sf::Vector2f getChildDesiredPosition();
 };

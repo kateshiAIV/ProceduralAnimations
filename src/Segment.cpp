@@ -96,6 +96,9 @@ void Segment::update(Segment parentSegment, float time)
 {
     // Compute direction vector from current position to desired target
     sf::Vector2f direction = m_DesiredPosition - m_Position;
+    float distance = std::hypot(m_DesiredPosition.x - m_Position.x,
+        m_DesiredPosition.y - m_Position.y);
+
 
     // Compute angle (in degrees)
     m_Angle = std::atan2(direction.y, direction.x) * 180.f / 3.14159265f;
@@ -105,13 +108,14 @@ void Segment::update(Segment parentSegment, float time)
     sf::Vector2f dir(std::cos(radianAngle), std::sin(radianAngle));
 
     // 
-    float waveAmplitude = 0.0f;       
-    float waveFrequency = 3.0f;        
-    float offset = std::sin(time * waveFrequency) * waveAmplitude;
+    float waveAmplitude = distance/2.0f;
+    float waveFrequency = distance/10.0f;
+    float offset = std::clamp(std::cos(time * waveFrequency),-1.0f,1.0f) * waveAmplitude;
 
 
     sf::Vector2f perpendicular(-dir.y, dir.x);
-    m_Position += direction * 0.075f + perpendicular * (offset * 0.0015f);
+    m_Position = m_Position + direction * 0.075f;
+	m_Position = m_Position +direction*0.075f + perpendicular * offset * 0.075f;
 
 
     point1 = m_Position;
@@ -124,6 +128,10 @@ void Segment::update(Segment parentSegment, float time)
     radianAngle = (m_Angle - 90) * 3.14159265f / 180.0f;
     sf::Vector2f helpdir1(std::cos(radianAngle), std::sin(radianAngle));
     helppoint1 = m_Position + helpdir1 * (m_Radius - 20.0f);
+
+    radianAngle = (m_Angle - 180) * 3.14159265f / 180.0f;
+    sf::Vector2f helpDirChild(std::cos(radianAngle), std::sin(radianAngle));
+    ChildDesiredPosition = m_Position + helpDirChild * m_Radius;
 
     m_CircleShape.setPosition(m_Position);
 
@@ -144,4 +152,9 @@ sf::Vector2f Segment::getHelpPoint0()
 sf::Vector2f Segment::getHelpPoint1()
 {
     return helppoint1;
+}
+
+sf::Vector2f Segment::getChildDesiredPosition()
+{
+    return ChildDesiredPosition;
 }
