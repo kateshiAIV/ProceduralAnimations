@@ -16,6 +16,9 @@ private:
 	sf::CircleShape m_CircleShape;
     sf::Vector2f point1 = m_Position; 
     sf::Vector2f point2 = m_Position; 
+    sf::Vector2f helppoint0 = m_Position;
+    sf::Vector2f helppoint1 = m_Position;
+    sf::ConvexShape convex;
     
 
 
@@ -27,5 +30,7 @@ public:
 	void setPosition(const sf::Vector2f& position);
 	void setDesiredPosition(const sf::Vector2f& desiredPosition);
 	float getRadius() const;
-	void update();
+	void update(Segment parentSegment);
+    sf::Vector2f getHelpPoint0();
+    sf::Vector2f getHelpPoint1();
 };

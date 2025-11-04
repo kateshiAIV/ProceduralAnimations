@@ -1,4 +1,4 @@
-#include <SFML/Graphics.hpp>
+﻿#include <SFML/Graphics.hpp>
 #include "Creature.h"
 
 
@@ -58,11 +58,11 @@ void Creature::update()
     if (m_Body.empty()) { return; };
 
     m_Body[0].setDesiredPosition(m_DesiredPosition);
-    m_Body[0].update();
+    m_Body[0].update(m_Body[0]);
 
     for (size_t i = 1; i < m_Body.size(); ++i)
     {
         m_Body[i].setDesiredPosition(m_Body[i - 1].getPosition());
-        m_Body[i].update();
+        m_Body[i].update(m_Body[i-1]);
     }
 }

@@ -24,6 +24,12 @@ Segment::Segment(const sf::Vector2f& position, float angle, float distance, floa
 
     point1 = m_Position;                  
     point2 = m_Position + dir * m_Radius; 
+
+    convex.setPointCount(4);
+    convex.setPoint(0, sf::Vector2f(0.0f, 0.0f));
+    convex.setPoint(1, sf::Vector2f(0.0f, 0.0f));
+    convex.setPoint(2, sf::Vector2f(0.0f, 0.0f));
+    convex.setPoint(3, sf::Vector2f(0.0f, 0.0f));
 }
 
 
@@ -33,12 +39,32 @@ void Segment::draw(sf::RenderWindow& window) const
         sf::Vertex({point1}),
         sf::Vertex({point2})
     };
+
+    std::array<sf::Vertex, 2> helpline0 = {
+    sf::Vertex({point1}),
+    sf::Vertex({helppoint0})
+    };
+
+    std::array<sf::Vertex, 2> helpline1 = {
+    sf::Vertex({point1}),
+    sf::Vertex({helppoint1})
+    };
+
+
+
     sf::CircleShape arrow(3.f);
     arrow.setFillColor(sf::Color::Red);
     arrow.setOrigin(sf::Vector2f(3.f, 3.f));
     arrow.setPosition(point2);
+
+
+
+
     window.draw(m_CircleShape);
+    window.draw(convex);
     window.draw(line.data(), line.size(), sf::PrimitiveType::Lines);
+    window.draw(helpline0.data(), line.size(), sf::PrimitiveType::Lines);
+    window.draw(helpline1.data(), line.size(), sf::PrimitiveType::Lines);
     window.draw(arrow);
 }
 
@@ -66,7 +92,7 @@ float Segment::getRadius() const
 }
 
 
-void Segment::update()
+void Segment::update(Segment parentSegment)
 {
     // Compute direction vector from current position to desired target
     sf::Vector2f direction = m_DesiredPosition - m_Position;
@@ -81,6 +107,33 @@ void Segment::update()
     point1 = m_Position;
     point2 = m_Position + dir * m_Radius;
 
+    radianAngle = (m_Angle+90) * 3.14159265f / 180.0f;
+    sf::Vector2f helpdir0(std::cos(radianAngle), std::sin(radianAngle));
+    helppoint0 = m_Position + helpdir0 * (m_Radius - 5.0f);
+
+
+    radianAngle = (m_Angle - 90) * 3.14159265f / 180.0f;
+    sf::Vector2f helpdir1(std::cos(radianAngle), std::sin(radianAngle));
+    helppoint1 = m_Position + helpdir1 * (m_Radius-5.0f);
+
 	m_Position = m_Position + direction * 0.075f;
 	m_CircleShape.setPosition(m_Position);
+
+    convex.setPoint(0, helppoint0);
+    convex.setPoint(1, helppoint1);
+    convex.setPoint(2, parentSegment.getHelpPoint1());
+    convex.setPoint(3, parentSegment.getHelpPoint0());
+    convex.setFillColor(m_Color);
+
+}
+
+
+sf::Vector2f Segment::getHelpPoint0()
+{
+    return helppoint0;
+}
+
+sf::Vector2f Segment::getHelpPoint1()
+{
+    return helppoint1;
 }
