@@ -10,7 +10,7 @@ int main()
 	Creature creature;
     auto window = sf::RenderWindow(sf::VideoMode({1920u, 1080u}), "CMake SFML Project");
     window.setFramerateLimit(144);
-
+	sf::Clock clock;
 
     while (window.isOpen())
     {
@@ -37,7 +37,8 @@ int main()
             }
         }
 
-		creature.update();
+        float time = clock.getElapsedTime().asSeconds();
+		creature.update(time);
         window.clear();
         creature.draw(window);
         window.display();

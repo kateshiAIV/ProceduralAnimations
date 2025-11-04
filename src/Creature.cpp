@@ -53,16 +53,16 @@ void Creature::setDesiredPosition(const sf::Vector2f& desiredPosition)
 }
 
 
-void Creature::update()
+void Creature::update(float time)
 {
     if (m_Body.empty()) { return; };
 
     m_Body[0].setDesiredPosition(m_DesiredPosition);
-    m_Body[0].update(m_Body[0]);
+    m_Body[0].update(m_Body[0], time);
 
     for (size_t i = 1; i < m_Body.size(); ++i)
     {
         m_Body[i].setDesiredPosition(m_Body[i - 1].getPosition());
-        m_Body[i].update(m_Body[i-1]);
+        m_Body[i].update(m_Body[i-1], time);
     }
 }

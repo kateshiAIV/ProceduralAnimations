@@ -1,4 +1,4 @@
-#include <SFML/Graphics.hpp>
+﻿#include <SFML/Graphics.hpp>
 #include "Segment.h"
 #include <cmath>
 #include <array>
@@ -62,10 +62,10 @@ void Segment::draw(sf::RenderWindow& window) const
 
     window.draw(m_CircleShape);
     window.draw(convex);
-    window.draw(line.data(), line.size(), sf::PrimitiveType::Lines);
-    window.draw(helpline0.data(), line.size(), sf::PrimitiveType::Lines);
-    window.draw(helpline1.data(), line.size(), sf::PrimitiveType::Lines);
-    window.draw(arrow);
+    //window.draw(line.data(), line.size(), sf::PrimitiveType::Lines);
+    //window.draw(helpline0.data(), line.size(), sf::PrimitiveType::Lines);
+    //window.draw(helpline1.data(), line.size(), sf::PrimitiveType::Lines);
+    //window.draw(arrow);
 }
 
 
@@ -92,7 +92,7 @@ float Segment::getRadius() const
 }
 
 
-void Segment::update(Segment parentSegment)
+void Segment::update(Segment parentSegment, float time)
 {
     // Compute direction vector from current position to desired target
     sf::Vector2f direction = m_DesiredPosition - m_Position;
@@ -104,28 +104,36 @@ void Segment::update(Segment parentSegment)
     float radianAngle = m_Angle * 3.14159265f / 180.0f;
     sf::Vector2f dir(std::cos(radianAngle), std::sin(radianAngle));
 
+    // 
+    float waveAmplitude = 0.0f;       
+    float waveFrequency = 3.0f;        
+    float offset = std::sin(time * waveFrequency) * waveAmplitude;
+
+
+    sf::Vector2f perpendicular(-dir.y, dir.x);
+    m_Position += direction * 0.075f + perpendicular * (offset * 0.0015f);
+
+
     point1 = m_Position;
     point2 = m_Position + dir * m_Radius;
 
-    radianAngle = (m_Angle+90) * 3.14159265f / 180.0f;
+    radianAngle = (m_Angle + 90) * 3.14159265f / 180.0f;
     sf::Vector2f helpdir0(std::cos(radianAngle), std::sin(radianAngle));
-    helppoint0 = m_Position + helpdir0 * (m_Radius - 5.0f);
-
+    helppoint0 = m_Position + helpdir0 * (m_Radius - 20.0f);
 
     radianAngle = (m_Angle - 90) * 3.14159265f / 180.0f;
     sf::Vector2f helpdir1(std::cos(radianAngle), std::sin(radianAngle));
-    helppoint1 = m_Position + helpdir1 * (m_Radius-5.0f);
+    helppoint1 = m_Position + helpdir1 * (m_Radius - 20.0f);
 
-	m_Position = m_Position + direction * 0.075f;
-	m_CircleShape.setPosition(m_Position);
+    m_CircleShape.setPosition(m_Position);
 
     convex.setPoint(0, helppoint0);
     convex.setPoint(1, helppoint1);
     convex.setPoint(2, parentSegment.getHelpPoint1());
     convex.setPoint(3, parentSegment.getHelpPoint0());
     convex.setFillColor(m_Color);
-
 }
+
 
 
 sf::Vector2f Segment::getHelpPoint0()

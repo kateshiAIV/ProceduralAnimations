@@ -30,7 +30,7 @@ public:
 	void setPosition(const sf::Vector2f& position);
 	void setDesiredPosition(const sf::Vector2f& desiredPosition);
 	float getRadius() const;
-	void update(Segment parentSegment);
+	void update(Segment parentSegment, float time);
     sf::Vector2f getHelpPoint0();
     sf::Vector2f getHelpPoint1();
 };

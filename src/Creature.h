@@ -14,5 +14,5 @@ public:
 	Creature();
 	void draw(sf::RenderWindow& window) const;
 	void setDesiredPosition(const sf::Vector2f& desiredPosition);
-	void update();
+	void update(float time);
 };
