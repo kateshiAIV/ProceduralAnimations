@@ -199,7 +199,7 @@ void Segment::updateBody(Segment parentSegment, float time)
     point1 = m_Position;
     point2 = m_Position + dir * m_Radius;
 
-    radianAngle = (m_Angle + 90) * 3.14159265f / 180.0f;
+    radianAngle = (m_Angle + 90) * 3.14159265f / 180.0f; 
     sf::Vector2f helpdir0(std::cos(radianAngle), std::sin(radianAngle));
     helppoint0 = m_Position + helpdir0 * (m_Radius - 15.0f);
 
