@@ -59,9 +59,9 @@ void Segment::draw(sf::RenderWindow& window) const
 
 
 
-
-    window.draw(m_CircleShape);
     window.draw(convex);
+    window.draw(m_CircleShape);
+
     //window.draw(line.data(), line.size(), sf::PrimitiveType::Lines);
     //window.draw(helpline0.data(), line.size(), sf::PrimitiveType::Lines);
     //window.draw(helpline1.data(), line.size(), sf::PrimitiveType::Lines);
@@ -92,7 +92,7 @@ float Segment::getRadius() const
 }
 
 
-void Segment::update(Segment parentSegment, float time)
+void Segment::updateHead(Segment parentSegment, float time)
 {
     // Compute direction vector from current position to desired target
     sf::Vector2f direction = m_DesiredPosition - m_Position;
@@ -108,26 +108,80 @@ void Segment::update(Segment parentSegment, float time)
     sf::Vector2f dir(std::cos(radianAngle), std::sin(radianAngle));
 
     // 
-    float waveAmplitude = distance/2.0f;
-    float waveFrequency = distance/10.0f;
+    float waveAmplitude = 60.0f;
+    float waveFrequency = 9.0f;
     float offset = std::clamp(std::cos(time * waveFrequency),-1.0f,1.0f) * waveAmplitude;
 
 
     sf::Vector2f perpendicular(-dir.y, dir.x);
-    m_Position = m_Position + direction * 0.075f;
-	m_Position = m_Position +direction*0.075f + perpendicular * offset * 0.075f;
-
+    //m_Position = m_Position + direction * 0.075f;
+    float clampedX = std::clamp(direction.x, -90.0f, 90.0f);
+    float clampedY = std::clamp(direction.y, -90.0f, 90.0f);
+    m_Position = m_Position + sf::Vector2f(clampedX, clampedY)  /*direction*/ * 0.055f + perpendicular * offset * 0.055f;
+    
 
     point1 = m_Position;
     point2 = m_Position + dir * m_Radius;
 
     radianAngle = (m_Angle + 90) * 3.14159265f / 180.0f;
     sf::Vector2f helpdir0(std::cos(radianAngle), std::sin(radianAngle));
-    helppoint0 = m_Position + helpdir0 * (m_Radius - 20.0f);
+    helppoint0 = m_Position + helpdir0 * (m_Radius - 0.0f);
 
     radianAngle = (m_Angle - 90) * 3.14159265f / 180.0f;
     sf::Vector2f helpdir1(std::cos(radianAngle), std::sin(radianAngle));
-    helppoint1 = m_Position + helpdir1 * (m_Radius - 20.0f);
+    helppoint1 = m_Position + helpdir1 * (m_Radius - 0.0f);
+
+    radianAngle = (m_Angle - 180) * 3.14159265f / 180.0f;
+    sf::Vector2f helpDirChild(std::cos(radianAngle), std::sin(radianAngle));
+    ChildDesiredPosition = m_Position + helpDirChild * m_Radius;
+
+    m_CircleShape.setPosition(m_Position);
+
+    convex.setPoint(0, helppoint0);
+    convex.setPoint(1, helppoint1);
+    convex.setPoint(2, parentSegment.getHelpPoint1());
+    convex.setPoint(3, parentSegment.getHelpPoint0());
+    convex.setFillColor(m_Color);
+}
+
+
+void Segment::updateBody(Segment parentSegment, float time)
+{
+    // Compute direction vector from current position to desired target
+    sf::Vector2f direction = m_DesiredPosition - m_Position;
+    float distance = std::hypot(m_DesiredPosition.x - m_Position.x,
+        m_DesiredPosition.y - m_Position.y);
+
+
+    // Compute angle (in degrees)
+    m_Angle = std::atan2(direction.y, direction.x) * 180.f / 3.14159265f;
+
+    // Update segment end based on new facing angle
+    float radianAngle = m_Angle * 3.14159265f / 180.0f;
+    sf::Vector2f dir(std::cos(radianAngle), std::sin(radianAngle));
+
+    // 
+    float waveAmplitude = distance / 2.0f;
+    float waveFrequency = distance / 10.0f;
+    float offset = std::clamp(std::cos(time * waveFrequency), -1.0f, 1.0f) * waveAmplitude;
+
+
+    sf::Vector2f perpendicular(-dir.y, dir.x);
+    //m_Position = m_Position + direction * 0.075f;
+    if (distance>= 3) {
+        m_Position = m_Position + direction * 0.075f;
+    }
+
+    point1 = m_Position;
+    point2 = m_Position + dir * m_Radius;
+
+    radianAngle = (m_Angle + 90) * 3.14159265f / 180.0f;
+    sf::Vector2f helpdir0(std::cos(radianAngle), std::sin(radianAngle));
+    helppoint0 = m_Position + helpdir0 * (m_Radius - 15.0f);
+
+    radianAngle = (m_Angle - 90) * 3.14159265f / 180.0f;
+    sf::Vector2f helpdir1(std::cos(radianAngle), std::sin(radianAngle));
+    helppoint1 = m_Position + helpdir1 * (m_Radius - 15.0f);
 
     radianAngle = (m_Angle - 180) * 3.14159265f / 180.0f;
     sf::Vector2f helpDirChild(std::cos(radianAngle), std::sin(radianAngle));

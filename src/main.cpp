@@ -8,7 +8,7 @@ int main()
 {
 
 	Creature creature;
-    auto window = sf::RenderWindow(sf::VideoMode({1920u, 1080u}), "CMake SFML Project");
+    auto window = sf::RenderWindow(sf::VideoMode({3840u, 2160u}), "CMake SFML Project");
     window.setFramerateLimit(144);
 	sf::Clock clock;
 

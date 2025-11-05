@@ -14,7 +14,7 @@ Creature::Creature()
         Segment()
     }
 {
-    float r1 = 50.0f;
+    float r1 = 25.0f;
     sf::Vector2f startPos = { 960.f, 540.f }; 
 
     for (int i = 0; i < 8; i++)
@@ -58,11 +58,11 @@ void Creature::update(float time)
     if (m_Body.empty()) { return; };
 
     m_Body[0].setDesiredPosition(m_DesiredPosition);
-    m_Body[0].update(m_Body[0], time);
+    m_Body[0].updateHead(m_Body[0], time);
 
     for (size_t i = 1; i < m_Body.size(); ++i)
     {
         m_Body[i].setDesiredPosition(m_Body[i - 1].getChildDesiredPosition());
-        m_Body[i].update(m_Body[i-1], time);
+        m_Body[i].updateBody(m_Body[i-1], time);
     }
 }
