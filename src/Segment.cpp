@@ -51,18 +51,18 @@ void Segment::draw(sf::RenderWindow& window) const
     };
 
 
-
     sf::CircleShape arrow(3.f);
     arrow.setFillColor(sf::Color::Red);
     arrow.setOrigin(sf::Vector2f(3.f, 3.f));
     arrow.setPosition(point2);
 
 
-
-    window.draw(convex);
     window.draw(m_CircleShape);
+    window.draw(convex);
+
 
     //window.draw(line.data(), line.size(), sf::PrimitiveType::Lines);
+    
     //window.draw(helpline0.data(), line.size(), sf::PrimitiveType::Lines);
     //window.draw(helpline1.data(), line.size(), sf::PrimitiveType::Lines);
     //window.draw(arrow);
@@ -95,13 +95,37 @@ float Segment::getRadius() const
 void Segment::updateHead(Segment parentSegment, float time)
 {
     // Compute direction vector from current position to desired target
-    sf::Vector2f direction = m_DesiredPosition - m_Position;
+    sf::Vector2f direction = point2 - m_Position;
+    sf::Vector2f direction1 = m_DesiredPosition - m_Position;
     float distance = std::hypot(m_DesiredPosition.x - m_Position.x,
         m_DesiredPosition.y - m_Position.y);
 
 
     // Compute angle (in degrees)
-    m_Angle = std::atan2(direction.y, direction.x) * 180.f / 3.14159265f;
+    float m_DesiredAngle = std::atan2(direction1.y, direction1.x) * 180.f / 3.14159265f;
+
+    // Normalize both angles to [0, 360)
+    auto normalizeAngle = [](float angle) {
+        while (angle < 0) angle += 360.f;
+        while (angle >= 360.f) angle -= 360.f;
+        return angle;
+        };
+
+    m_Angle = normalizeAngle(m_Angle);
+    m_DesiredAngle = normalizeAngle(m_DesiredAngle);
+
+    // Compute smallest angular difference
+    float diff = m_DesiredAngle - m_Angle;
+    if (diff > 180.f) diff -= 360.f;
+    if (diff < -180.f) diff += 360.f;
+
+    // Smoothly rotate toward target angle
+    float rotationSpeed = 0.5f; // degrees per second
+    float maxStep = rotationSpeed; // frame time delta
+    if (std::abs(diff) < maxStep)
+        m_Angle = m_DesiredAngle;
+    else
+        m_Angle += (diff > 0 ? 1 : -1) * maxStep;
 
     // Update segment end based on new facing angle
     float radianAngle = m_Angle * 3.14159265f / 180.0f;
@@ -125,11 +149,11 @@ void Segment::updateHead(Segment parentSegment, float time)
 
     radianAngle = (m_Angle + 90) * 3.14159265f / 180.0f;
     sf::Vector2f helpdir0(std::cos(radianAngle), std::sin(radianAngle));
-    helppoint0 = m_Position + helpdir0 * (m_Radius - 0.0f);
+    helppoint0 = m_Position + helpdir0 * (m_Radius - 10.0f);
 
     radianAngle = (m_Angle - 90) * 3.14159265f / 180.0f;
     sf::Vector2f helpdir1(std::cos(radianAngle), std::sin(radianAngle));
-    helppoint1 = m_Position + helpdir1 * (m_Radius - 0.0f);
+    helppoint1 = m_Position + helpdir1 * (m_Radius - 10.0f);
 
     radianAngle = (m_Angle - 180) * 3.14159265f / 180.0f;
     sf::Vector2f helpDirChild(std::cos(radianAngle), std::sin(radianAngle));

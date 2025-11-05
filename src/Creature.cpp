@@ -14,7 +14,7 @@ Creature::Creature()
         Segment()
     }
 {
-    float r1 = 25.0f;
+    float r1 =45.0f;
     sf::Vector2f startPos = { 960.f, 540.f }; 
 
     for (int i = 0; i < 8; i++)
