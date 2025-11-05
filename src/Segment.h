@@ -3,6 +3,10 @@
 
 #include <SFML/Graphics.hpp>
 
+const float WAVE_APPLITUDE = 60.0f;
+const float WAVE_FREQUENCY = 9.0f;
+const float MAX_HEAD_SPEED = 90.0f;
+
 class Segment
 {
 
@@ -20,6 +24,7 @@ private:
     sf::Vector2f helppoint1 = m_Position;
 	sf::Vector2f ChildDesiredPosition = m_Position;
     sf::ConvexShape convex;
+
     
 
 

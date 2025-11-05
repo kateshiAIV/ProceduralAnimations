@@ -12,7 +12,6 @@ Segment::Segment(const sf::Vector2f& position, float angle, float distance, floa
     m_Color = color;
 	m_DesiredPosition = position;
 
-
     m_CircleShape.setRadius(m_Radius);
     m_CircleShape.setFillColor(m_Color);
     m_CircleShape.setOrigin(sf::Vector2f(m_Radius, m_Radius)); 
@@ -30,6 +29,7 @@ Segment::Segment(const sf::Vector2f& position, float angle, float distance, floa
     convex.setPoint(1, sf::Vector2f(0.0f, 0.0f));
     convex.setPoint(2, sf::Vector2f(0.0f, 0.0f));
     convex.setPoint(3, sf::Vector2f(0.0f, 0.0f));
+ 
 }
 
 
@@ -59,13 +59,6 @@ void Segment::draw(sf::RenderWindow& window) const
 
     window.draw(m_CircleShape);
     window.draw(convex);
-
-
-    //window.draw(line.data(), line.size(), sf::PrimitiveType::Lines);
-    
-    //window.draw(helpline0.data(), line.size(), sf::PrimitiveType::Lines);
-    //window.draw(helpline1.data(), line.size(), sf::PrimitiveType::Lines);
-    //window.draw(arrow);
 }
 
 
@@ -94,15 +87,15 @@ float Segment::getRadius() const
 
 void Segment::updateHead(Segment parentSegment, float time)
 {
-    // Compute direction vector from current position to desired target
-    sf::Vector2f direction = point2 - m_Position;
-    sf::Vector2f direction1 = m_DesiredPosition - m_Position;
+
+    sf::Vector2f directionVector = point2 - m_Position;
+
+    sf::Vector2f mouseOffset = m_DesiredPosition - m_Position;
+
     float distance = std::hypot(m_DesiredPosition.x - m_Position.x,
         m_DesiredPosition.y - m_Position.y);
 
-
-    // Compute angle (in degrees)
-    float m_DesiredAngle = std::atan2(direction1.y, direction1.x) * 180.f / 3.14159265f;
+    float m_DesiredAngle = std::atan2(mouseOffset.y, mouseOffset.x) * 180.f / 3.14159265f;
 
     // Normalize both angles to [0, 360)
     auto normalizeAngle = [](float angle) {
@@ -120,8 +113,8 @@ void Segment::updateHead(Segment parentSegment, float time)
     if (diff < -180.f) diff += 360.f;
 
     // Smoothly rotate toward target angle
-    float rotationSpeed = 0.5f; // degrees per second
-    float maxStep = rotationSpeed; // frame time delta
+    float rotationSpeed = 0.5f; 
+    float maxStep = rotationSpeed; 
     if (std::abs(diff) < maxStep)
         m_Angle = m_DesiredAngle;
     else
@@ -131,16 +124,13 @@ void Segment::updateHead(Segment parentSegment, float time)
     float radianAngle = m_Angle * 3.14159265f / 180.0f;
     sf::Vector2f dir(std::cos(radianAngle), std::sin(radianAngle));
 
-    // 
-    float waveAmplitude = 60.0f;
-    float waveFrequency = 9.0f;
-    float offset = std::clamp(std::cos(time * waveFrequency),-1.0f,1.0f) * waveAmplitude;
+
+    float offset = std::clamp(std::cos(time * WAVE_FREQUENCY),-1.0f,1.0f) * WAVE_APPLITUDE;
 
 
     sf::Vector2f perpendicular(-dir.y, dir.x);
-    //m_Position = m_Position + direction * 0.075f;
-    float clampedX = std::clamp(direction.x, -90.0f, 90.0f);
-    float clampedY = std::clamp(direction.y, -90.0f, 90.0f);
+    float clampedX = std::clamp(directionVector.x, -MAX_HEAD_SPEED, MAX_HEAD_SPEED);
+    float clampedY = std::clamp(directionVector.y, -MAX_HEAD_SPEED, MAX_HEAD_SPEED);
     m_Position = m_Position + sf::Vector2f(clampedX, clampedY)  /*direction*/ * 0.055f + perpendicular * offset * 0.055f;
     
 
@@ -171,27 +161,22 @@ void Segment::updateHead(Segment parentSegment, float time)
 
 void Segment::updateBody(Segment parentSegment, float time)
 {
-    // Compute direction vector from current position to desired target
     sf::Vector2f direction = m_DesiredPosition - m_Position;
     float distance = std::hypot(m_DesiredPosition.x - m_Position.x,
         m_DesiredPosition.y - m_Position.y);
 
 
-    // Compute angle (in degrees)
     m_Angle = std::atan2(direction.y, direction.x) * 180.f / 3.14159265f;
 
-    // Update segment end based on new facing angle
     float radianAngle = m_Angle * 3.14159265f / 180.0f;
     sf::Vector2f dir(std::cos(radianAngle), std::sin(radianAngle));
 
-    // 
     float waveAmplitude = distance / 2.0f;
     float waveFrequency = distance / 10.0f;
     float offset = std::clamp(std::cos(time * waveFrequency), -1.0f, 1.0f) * waveAmplitude;
 
 
     sf::Vector2f perpendicular(-dir.y, dir.x);
-    //m_Position = m_Position + direction * 0.075f;
     if (distance>= 3) {
         m_Position = m_Position + direction * 0.075f;
     }
