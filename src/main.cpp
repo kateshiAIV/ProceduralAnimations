@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "Segment.h"
 #include "Creature.h"
+#include "QuickMenu.h"
 
 
 
@@ -18,6 +19,8 @@ int main()
     view.zoom(1.0f); 
     window.setView(view);
 
+
+    QuickMenu menu;
 
     while (window.isOpen())
     {
@@ -42,7 +45,19 @@ int main()
             {
                 if (mousePressed->button == sf::Mouse::Button::Left)
                 {
-                    window.close();
+                    sf::Vector2f mousePos(
+                        static_cast<float>(mousePressed->position.x),
+                        static_cast<float>(mousePressed->position.y)
+                    );
+
+                    if (!menu.isVisible()) {
+                        menu.setPosition(mousePos);
+                        menu.show();
+                    }
+                    else {
+                        if(menu.handleClick(mousePos)) continue;
+                        menu.setPosition(mousePos);
+                    }
                 }
             }
 
@@ -58,6 +73,7 @@ int main()
 		creature.update(time);
         window.clear();
         creature.draw(window);
+        menu.draw(window);
         window.display();
     }
 }
