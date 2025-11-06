@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "Creature.h"
 #include <vector>
 #include <string>
 
@@ -16,7 +17,7 @@ public:
     QuickMenu();
     void setPosition(const sf::Vector2f& pos);
     void draw(sf::RenderWindow& window) const;
-    bool handleClick(const sf::Vector2f& mousePos);
+    CreatureType handleClick(const sf::Vector2f& mousePos);
     void show();
     void hide();
     bool isVisible() const;

@@ -1,4 +1,5 @@
 #include "QuickMenu.h"
+#include "Creature.h"
 #include <iostream>
 
 QuickMenu::QuickMenu()
@@ -48,9 +49,9 @@ void QuickMenu::draw(sf::RenderWindow& window) const
     }
 }
 
-bool QuickMenu::handleClick(const sf::Vector2f& mousePos)
+CreatureType QuickMenu::handleClick(const sf::Vector2f& mousePos)
 {
-    if (!visible) return false;
+    if (!visible) return CreatureType::None;
 
     for (size_t i = 0; i < buttons.size(); ++i)
     {
@@ -60,11 +61,24 @@ bool QuickMenu::handleClick(const sf::Vector2f& mousePos)
             std::cout << "Selected: " << option << std::endl;
 
             if (option == "close")
-                hide();
-			return true;
+            {
+                return CreatureType::None;
+            }
+            else if (option == "predator")
+            {
+                return CreatureType::Predator;
+            }
+            else if (option == "vegan")
+            {
+                return CreatureType::Vegan;
+            }
+            else if (option == "fruit")
+            {
+                return CreatureType::Fruit;
+            }
         }
     }
-	return false;
+	return CreatureType::None;
 }
 
 void QuickMenu::show()

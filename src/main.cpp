@@ -2,17 +2,15 @@
 #include "Segment.h"
 #include "Creature.h"
 #include "QuickMenu.h"
-
+#include <iostream>
 
 
 int main()
 {
 
 
-    std::vector<Creature> creatures(10);
+    std::vector<Creature> creatures;
 
-
-	Creature creature;
     auto window = sf::RenderWindow(sf::VideoMode({3840u, 2160u}), "CMake SFML Project");
     window.setFramerateLimit(144);
 	sf::Clock clock;
@@ -47,8 +45,7 @@ int main()
             {
                 if (mousePressed->button == sf::Mouse::Button::Left)
                 {
-                    Creature creature;
-					creatures.push_back(creature);
+
 
 
                     sf::Vector2f mousePos(
@@ -61,8 +58,20 @@ int main()
                         menu.show();
                     }
                     else {
-                        if(menu.handleClick(mousePos)) continue;
+                        if (menu.handleClick(mousePos) == CreatureType::Predator) 
+                        { 
+                            creatures.emplace_back(Creature(mousePressed->position.x, mousePressed->position.y, 255));
+                        }
+                        else if (menu.handleClick(mousePos) == CreatureType::Vegan)
+                        {
+                            creatures.emplace_back(Creature(mousePressed->position.x, mousePressed->position.y, 155));
+                        }
+                        else if (menu.handleClick(mousePos) == CreatureType::Fruit)
+                        {
+                            creatures.emplace_back(mousePressed->position.x, mousePressed->position.y, 255);
+                        }
                         menu.setPosition(mousePos);
+                        menu.hide();
                     }
                 }
             }
@@ -70,7 +79,6 @@ int main()
 
             if (const auto* mouseMoved = event->getIf<sf::Event::MouseMoved>())
             {
-                creature.setDesiredPosition(sf::Vector2f(static_cast<float>(mouseMoved->position.x), static_cast<float>(mouseMoved->position.y)));
                 for (int i = 0; i < creatures.size(); i++)
                 {
                     creatures[i].setDesiredPosition(sf::Vector2f(static_cast<float>(mouseMoved->position.x), static_cast<float>(mouseMoved->position.y)));
@@ -85,15 +93,12 @@ int main()
         {
             creatures[i].update(time);
         }
-
-		creature.update(time);
         window.clear();
         for (int i = 0; i < creatures.size(); i++)
         {
 			creatures[i].draw(window);
         }
 
-        creature.draw(window);
         menu.draw(window);
         window.display();
     }

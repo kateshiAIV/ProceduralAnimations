@@ -2,7 +2,7 @@
 #include "Creature.h"
 
 
-Creature::Creature()
+Creature::Creature(float x, float y, float Clr)
     : m_Body{
         Segment(),
         Segment(),
@@ -13,7 +13,7 @@ Creature::Creature()
         Segment(),
         Segment()
     }
-{
+{   
     float r1 =45.0f;
     sf::Vector2f startPos = { 960.f, 540.f }; 
 
@@ -25,14 +25,14 @@ Creature::Creature()
         sf::Vector2f pos;
         if (i == 0)
         {
-            pos = startPos;
+            pos = sf::Vector2f(x,y);
         }
         else
         {
             pos = m_Body[i - 1].getPosition() - sf::Vector2f(m_Body[i - 1].getRadius(), 0.f);
         }
 
-        m_Body[i] = Segment(pos, 0.0f, distance, r, sf::Color(255 - i * 30, i * 30, 150));
+        m_Body[i] = Segment(pos, 0.0f, distance, r, sf::Color(Clr - i * 30, i * 30, 150));
     }
 
 }
