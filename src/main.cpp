@@ -9,6 +9,8 @@ int main()
 {
 
 
+    std::vector<Creature> creatures(10);
+
 
 	Creature creature;
     auto window = sf::RenderWindow(sf::VideoMode({3840u, 2160u}), "CMake SFML Project");
@@ -45,6 +47,10 @@ int main()
             {
                 if (mousePressed->button == sf::Mouse::Button::Left)
                 {
+                    Creature creature;
+					creatures.push_back(creature);
+
+
                     sf::Vector2f mousePos(
                         static_cast<float>(mousePressed->position.x),
                         static_cast<float>(mousePressed->position.y)
@@ -65,13 +71,28 @@ int main()
             if (const auto* mouseMoved = event->getIf<sf::Event::MouseMoved>())
             {
                 creature.setDesiredPosition(sf::Vector2f(static_cast<float>(mouseMoved->position.x), static_cast<float>(mouseMoved->position.y)));
+                for (int i = 0; i < creatures.size(); i++)
+                {
+                    creatures[i].setDesiredPosition(sf::Vector2f(static_cast<float>(mouseMoved->position.x), static_cast<float>(mouseMoved->position.y)));
+                }
+            
             }
         }
 
         float time = clock.getElapsedTime().asSeconds();
 
+        for (int i = 0; i < creatures.size(); i++)
+        {
+            creatures[i].update(time);
+        }
+
 		creature.update(time);
         window.clear();
+        for (int i = 0; i < creatures.size(); i++)
+        {
+			creatures[i].draw(window);
+        }
+
         creature.draw(window);
         menu.draw(window);
         window.display();
