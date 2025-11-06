@@ -18,9 +18,9 @@ int main()
     view.zoom(1.0f); 
     window.setView(view);
 
+
     while (window.isOpen())
     {
-
         // Process events
         while (const auto event = window.pollEvent())
         {
@@ -38,11 +38,14 @@ int main()
             }
 
             // left mouse button pressed: creature menu
-            if (const auto* keyPressed = event->getIf<sf::Event::MouseButtonPressed>();
-                keyPressed && keyPressed->button == sf::Mouse::Button::Left)
+            if (const auto* mousePressed = event->getIf<sf::Event::MouseButtonPressed>())
             {
-                window.close();
+                if (mousePressed->button == sf::Mouse::Button::Left)
+                {
+                    window.close();
+                }
             }
+
 
             if (const auto* mouseMoved = event->getIf<sf::Event::MouseMoved>())
             {
