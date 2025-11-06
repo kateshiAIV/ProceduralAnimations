@@ -37,6 +37,13 @@ int main()
                 window.close();
             }
 
+            // left mouse button pressed: creature menu
+            if (const auto* keyPressed = event->getIf<sf::Event::MouseButtonPressed>();
+                keyPressed && keyPressed->button == sf::Mouse::Button::Left)
+            {
+                window.close();
+            }
+
             if (const auto* mouseMoved = event->getIf<sf::Event::MouseMoved>())
             {
                 creature.setDesiredPosition(sf::Vector2f(static_cast<float>(mouseMoved->position.x), static_cast<float>(mouseMoved->position.y)));
