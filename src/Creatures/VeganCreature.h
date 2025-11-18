@@ -9,5 +9,6 @@
 
 class VeganCreature : private Creature
 {
+public:
 	VeganCreature(float x, float y, float clr, CreatureType creatureType);
 };
