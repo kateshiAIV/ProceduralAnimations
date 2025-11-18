@@ -1,38 +1,44 @@
 ﻿#include <SFML/Graphics.hpp>
+#include <iostream>
 #include "Creature.h"
 
 
-Creature::Creature(float x, float y, float Clr)
-    : m_Body{
-        Segment(),
-        Segment(),
-        Segment(),
-        Segment(),
-        Segment(),
-        Segment(),
-        Segment(),
-        Segment()
-    }
+const int PREDATOR_CREATURE_SIZE = 8;
+const int VEGAN_CREATURE_SIZE = 4;
+const int FRUIT_CREATURE_SIZE = 1;
+
+
+
+Creature::Creature(float x, float y, float Clr, CreatureType creatureType)
 {   
-    float r1 =45.0f;
+    int creatureSize = 0;
+
+    switch (creatureType)
+    {
+        case CreatureType::Predator: { creatureSize = PREDATOR_CREATURE_SIZE; break; }
+        case CreatureType::Vegan: {creatureSize = VEGAN_CREATURE_SIZE; break;}
+        case CreatureType::Fruit: { creatureSize = FRUIT_CREATURE_SIZE; break; }
+    }
+
+    float r1 = creatureSize * 5.0f;
     sf::Vector2f startPos = { 960.f, 540.f }; 
 
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < creatureSize; i++)
     {
         float r = r1 - i * (r1 / (8 - 1)); 
         float distance = 50.f + i * 20.f;  
-
         sf::Vector2f pos;
         if (i == 0)
         {
-            pos = sf::Vector2f(x,y);
+            pos = sf::Vector2f(x, y);
+            m_Body.push_back(Segment(pos, 0.0f, distance,r,sf::Color(Clr - i * 30, i * 30, 150)));
+
         }
         else
         {
             pos = m_Body[i - 1].getPosition() - sf::Vector2f(m_Body[i - 1].getRadius(), 0.f);
+            m_Body.push_back(Segment(pos, 0.0f, distance, r, sf::Color(Clr - i * 30, i * 30, 150)));
         }
-
-        m_Body[i] = Segment(pos, 0.0f, distance, r, sf::Color(Clr - i * 30, i * 30, 150));
     }
 
 }

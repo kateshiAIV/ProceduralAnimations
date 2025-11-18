@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
-#include "Segment.h"
-#include "Creature.h"
+#include "Creatures/Segment.h"
+#include "Creatures/Creature.h"
 #include "QuickMenu.h"
 #include <iostream>
 
@@ -60,15 +60,15 @@ int main()
                     else {
                         if (menu.handleClick(mousePos) == CreatureType::Predator) 
                         { 
-                            creatures.emplace_back(Creature(mousePressed->position.x, mousePressed->position.y, 255));
+                            creatures.emplace_back(Creature(mousePressed->position.x, mousePressed->position.y, 255, CreatureType::Predator));
                         }
                         else if (menu.handleClick(mousePos) == CreatureType::Vegan)
                         {
-                            creatures.emplace_back(Creature(mousePressed->position.x, mousePressed->position.y, 155));
+                            creatures.emplace_back(Creature(mousePressed->position.x, mousePressed->position.y, 155, CreatureType::Vegan));
                         }
                         else if (menu.handleClick(mousePos) == CreatureType::Fruit)
                         {
-                            creatures.emplace_back(mousePressed->position.x, mousePressed->position.y, 255);
+                            creatures.emplace_back(mousePressed->position.x, mousePressed->position.y, 255,CreatureType::Fruit);
                         }
                         menu.setPosition(mousePos);
                         menu.hide();

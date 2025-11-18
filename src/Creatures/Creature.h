@@ -16,10 +16,10 @@ enum class CreatureType
 class Creature
 {
 private:
-	std::array<Segment, 8> m_Body;
 	sf::Vector2f m_DesiredPosition;
 public:
-	Creature(float x, float y, float clr);
+	std::vector<Segment> m_Body;
+	Creature(float x, float y, float clr, CreatureType creatureType);
 	void draw(sf::RenderWindow& window) const;
 	void setDesiredPosition(const sf::Vector2f& desiredPosition);
 	void update(float time);

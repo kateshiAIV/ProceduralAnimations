@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "Creature.h"
+#include "Creatures/Creature.h"
 #include <vector>
 #include <string>
 

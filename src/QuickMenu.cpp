@@ -1,5 +1,5 @@
 #include "QuickMenu.h"
-#include "Creature.h"
+#include "Creatures/Creature.h"
 #include <iostream>
 
 QuickMenu::QuickMenu()
