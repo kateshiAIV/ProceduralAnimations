@@ -7,8 +7,9 @@
 #include <SFML/Graphics.hpp>
 
 
-class FruitCreature : private Creature
+class FruitCreature : public Creature
 {
 public:
-	FruitCreature(float x, float y, float clr, CreatureType creatureType);
+	FruitCreature(float x, float y, CreatureType creatureType);
+	void update(float time, std::vector<std::unique_ptr<Creature>>& creatures) override;
 };

@@ -7,8 +7,8 @@
 #include <SFML/Graphics.hpp>
 
 
-class VeganCreature : private Creature
+class VeganCreature : public Creature
 {
 public:
-	VeganCreature(float x, float y, float clr, CreatureType creatureType);
+	VeganCreature(float x, float y, CreatureType creatureType);
 };

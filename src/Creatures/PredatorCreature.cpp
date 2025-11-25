@@ -2,7 +2,7 @@
 #include "PredatorCreature.h"
 
 
-PredatorCreature::PredatorCreature(float x, float y, float clr, CreatureType creatureType) : Creature(x, y, clr, creatureType)
+PredatorCreature::PredatorCreature(float x, float y, CreatureType creatureType) : Creature(x, y, creatureType)
 {
 
 }

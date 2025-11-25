@@ -17,10 +17,14 @@ class Creature
 {
 private:
 	sf::Vector2f m_DesiredPosition;
+	CreatureType m_CreatureType;
 public:
 	std::vector<Segment> m_Body;
-	Creature(float x, float y, float clr, CreatureType creatureType);
+	virtual ~Creature() = default;
+	Creature(float x, float y, CreatureType creatureType);
 	void draw(sf::RenderWindow& window) const;
 	void setDesiredPosition(const sf::Vector2f& desiredPosition);
-	void update(float time);
+	virtual void update(float time, std::vector<std::unique_ptr<Creature>>& creatures);
+	CreatureType getCreatureType();
+
 };

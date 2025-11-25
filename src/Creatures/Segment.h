@@ -3,10 +3,6 @@
 
 #include <SFML/Graphics.hpp>
 
-const float WAVE_APPLITUDE = 60.0f;
-const float WAVE_FREQUENCY = 9.0f;
-const float MAX_HEAD_SPEED = 90.0f;
-
 class Segment
 {
 
@@ -24,13 +20,15 @@ private:
     sf::Vector2f helppoint1 = m_Position;
 	sf::Vector2f ChildDesiredPosition = m_Position;
     sf::ConvexShape convex;
-
+    float m_waveApplitude;
+	float m_waveFrequency;
+	float m_maxHeadSpeed;
     
 
 
 public:
 	Segment() = default;
-    Segment(const sf::Vector2f& position, float angle, float distance, float radius, const sf::Color& color);
+    Segment(const sf::Vector2f& position, float angle, float distance, float radius, const sf::Color& color, float waveApplitude, float waveFrequency, float maxHeadSpead);
     void draw(sf::RenderWindow& window) const;
     sf::Vector2f  getPosition() const;
 	void setPosition(const sf::Vector2f& position);

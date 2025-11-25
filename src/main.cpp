@@ -12,7 +12,7 @@ int main()
 {
 
 
-    std::vector<Creature> creatures;
+    std::vector<std::unique_ptr<Creature>> creatures;
 
     auto window = sf::RenderWindow(sf::VideoMode({3840u, 2160u}), "CMake SFML Project");
     window.setFramerateLimit(144);
@@ -43,6 +43,8 @@ int main()
                 window.close();
             }
 
+
+
             // left mouse button pressed: creature menu
             if (const auto* mousePressed = event->getIf<sf::Event::MouseButtonPressed>())
             {
@@ -61,18 +63,32 @@ int main()
                         menu.show();
                     }
                     else {
-                        if (menu.handleClick(mousePos) == CreatureType::Predator) 
-                        { 
-                            creatures.emplace_back(PredatorCreature(mousePressed->position.x, mousePressed->position.y, 255, CreatureType::Predator));
+                        if (menu.handleClick(mousePos) == CreatureType::Predator)
+                        {
+                            creatures.push_back(std::make_unique<PredatorCreature>(
+                                mousePressed->position.x,
+                                mousePressed->position.y,
+                                CreatureType::Predator
+                            ));
                         }
                         else if (menu.handleClick(mousePos) == CreatureType::Vegan)
                         {
-                            creatures.emplace_back(VeganCreature(mousePressed->position.x, mousePressed->position.y, 155, CreatureType::Vegan));
+                            creatures.push_back(std::make_unique<VeganCreature>(
+                                mousePressed->position.x,
+                                mousePressed->position.y,
+                                CreatureType::Vegan
+                            ));
                         }
                         else if (menu.handleClick(mousePos) == CreatureType::Fruit)
                         {
-                            creatures.emplace_back(FruitCreature(mousePressed->position.x, mousePressed->position.y, 255,CreatureType::Fruit));
+                            creatures.push_back(std::make_unique<FruitCreature>(
+                                mousePressed->position.x,
+                                mousePressed->position.y,
+                                CreatureType::Fruit
+                            ));
                         }
+
+
                         menu.setPosition(mousePos);
                         menu.hide();
                     }
@@ -82,9 +98,13 @@ int main()
 
             if (const auto* mouseMoved = event->getIf<sf::Event::MouseMoved>())
             {
-                for (int i = 0; i < creatures.size(); i++)
+
+                for (auto& c : creatures)
                 {
-                    creatures[i].setDesiredPosition(sf::Vector2f(static_cast<float>(mouseMoved->position.x), static_cast<float>(mouseMoved->position.y)));
+                    if (c->getCreatureType() == CreatureType::Fruit)
+                    {
+                        c->setDesiredPosition(sf::Vector2f(static_cast<float>(mouseMoved->position.x), static_cast<float>(mouseMoved->position.y)));
+                    }
                 }
             
             }
@@ -92,16 +112,25 @@ int main()
 
         float time = clock.getElapsedTime().asSeconds();
 
-        for (int i = 0; i < creatures.size(); i++)
-        {
-            creatures[i].update(time);
-        }
-        window.clear();
-        for (int i = 0; i < creatures.size(); i++)
-        {
-			creatures[i].draw(window);
-        }
 
+
+		window.clear();
+        for (auto& c : creatures)
+        {
+			c->update(time, creatures);
+        }
+        for (auto& c : creatures)
+        {
+            if(c->getCreatureType() == CreatureType::Fruit) c->draw(window);
+        }
+        for (auto& c : creatures)
+        {
+            if(c->getCreatureType() == CreatureType::Vegan) c->draw(window);
+        }
+        for (auto& c : creatures)
+        {
+            if(c->getCreatureType() == CreatureType::Predator) c->draw(window);
+        }
         menu.draw(window);
         window.display();
     }

@@ -15,6 +15,6 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(main src/main.cpp "src/Creatures/Segment.h" "src/Creatures/Segment.cpp" "src/Creatures/Creature.h" "src/Creatures/Creature.cpp" "src/QuickMenu.cpp" "src/QuickMenu.h" "src/Creatures/VeganCreature.cpp" "src/Creatures/PredatorCreature.h" "src/Creatures/PredatorCreature.cpp" "src/Creatures/FruitCreature.h")
+add_executable(main src/main.cpp "src/Creatures/Segment.h" "src/Creatures/Segment.cpp" "src/Creatures/Creature.h" "src/Creatures/Creature.cpp" "src/QuickMenu.cpp" "src/QuickMenu.h" "src/Creatures/VeganCreature.h" "src/Creatures/VeganCreature.cpp" "src/Creatures/PredatorCreature.h" "src/Creatures/PredatorCreature.cpp" "src/Creatures/FruitCreature.h" "src/Creatures/FruitCreature.cpp")
 target_compile_features(main PRIVATE cxx_std_17)
 target_link_libraries(main PRIVATE SFML::Graphics)
