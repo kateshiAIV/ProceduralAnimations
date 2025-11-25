@@ -81,6 +81,35 @@ void Creature::update(float time, std::vector<std::unique_ptr<Creature>>& creatu
     m_Body[0].setDesiredPosition(m_DesiredPosition);
     m_Body[0].updateHead(m_Body[0], time);
 
+
+    for (auto& c : creatures)
+{
+    switch (m_CreatureType)
+    {
+    case CreatureType::Predator:
+    {
+        if (c->getCreatureType() == CreatureType::Vegan)
+        {
+            setDesiredPosition(c->m_Body[0].getPosition());
+        }
+        break;
+    }
+    case CreatureType::Vegan:
+    {
+        if (c->getCreatureType() == CreatureType::Fruit)
+        {
+            setDesiredPosition(c->m_Body[0].getPosition());
+        }
+        if (c->getCreatureType() == CreatureType::Predator)
+        {
+            //toDo
+            //delete vegan 
+        }
+        break;
+    }
+    }
+}
+
     for (size_t i = 1; i < m_Body.size(); ++i)
     {
         m_Body[i].setDesiredPosition(m_Body[i - 1].getChildDesiredPosition());
@@ -127,4 +156,16 @@ void Creature::update(float time, std::vector<std::unique_ptr<Creature>>& creatu
 CreatureType Creature::getCreatureType() 
 {
     return m_CreatureType;
+}
+
+
+bool Creature::getIsDead()
+{
+    return bIsDead;
+}
+
+
+void Creature::setIsDead(bool isDead)
+{
+    bIsDead = isDead;
 }

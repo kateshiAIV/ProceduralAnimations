@@ -18,6 +18,7 @@ class Creature
 private:
 	sf::Vector2f m_DesiredPosition;
 	CreatureType m_CreatureType;
+	bool bIsDead = false;
 public:
 	std::vector<Segment> m_Body;
 	virtual ~Creature() = default;
@@ -26,5 +27,7 @@ public:
 	void setDesiredPosition(const sf::Vector2f& desiredPosition);
 	virtual void update(float time, std::vector<std::unique_ptr<Creature>>& creatures);
 	CreatureType getCreatureType();
+	bool getIsDead();
+	void setIsDead(bool isDead);
 
 };

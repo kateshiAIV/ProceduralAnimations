@@ -131,6 +131,15 @@ int main()
         {
             if(c->getCreatureType() == CreatureType::Predator) c->draw(window);
         }
+        creatures.erase(
+            std::remove_if(
+                creatures.begin(),
+                creatures.end(),
+                [](auto& c) { return c->getIsDead(); }
+            ),
+            creatures.end()
+        );
+        
         menu.draw(window);
         window.display();
     }
