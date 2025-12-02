@@ -19,6 +19,7 @@ private:
 	sf::Vector2f m_DesiredPosition;
 	CreatureType m_CreatureType;
 	bool bIsDead = false;
+	bool bIsFed = false;
 public:
 	std::vector<Segment> m_Body;
 	virtual ~Creature() = default;
@@ -29,5 +30,7 @@ public:
 	CreatureType getCreatureType();
 	bool getIsDead();
 	void setIsDead(bool isDead);
-
+	bool getIsFed();
+	void setIsFed(bool isFed);
+	float getDistanceTo(Creature* creature);
 };

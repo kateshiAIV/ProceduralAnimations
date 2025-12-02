@@ -14,6 +14,8 @@ void FruitCreature::update(float time, std::vector<std::unique_ptr<Creature>>& c
     sf::Vector2f fruitPos = m_Body[0].getPosition();
     float fruitR = m_Body[0].getRadius();
 
+
+
     for (size_t i = 0; i < creatures.size(); ++i)
     {
         Creature* c = creatures[i].get();
@@ -31,6 +33,7 @@ void FruitCreature::update(float time, std::vector<std::unique_ptr<Creature>>& c
         if (distance < fruitR + veganR)
         {
             setIsDead(true);
+            c->setIsFed(true);
         }
     }
 }

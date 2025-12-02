@@ -11,4 +11,5 @@ class PredatorCreature : public Creature
 {
 public:
 	PredatorCreature(float x, float y, CreatureType creatureType);
+	void update(float time, std::vector<std::unique_ptr<Creature>>& creatures) override;
 };

@@ -51,15 +51,13 @@ int main()
                 if (mousePressed->button == sf::Mouse::Button::Left)
                 {
 
-
-
                     sf::Vector2f mousePos(
                         static_cast<float>(mousePressed->position.x),
                         static_cast<float>(mousePressed->position.y)
                     );
 
                     if (!menu.isVisible()) {
-                        menu.setPosition(mousePos);
+                        menu.setPosition(sf::Vector2f(static_cast<float>(mousePressed->position.x)-80.0f, static_cast<float>(mousePressed->position.y)-80.0f));
                         menu.show();
                     }
                     else {
@@ -118,6 +116,7 @@ int main()
         for (auto& c : creatures)
         {
 			c->update(time, creatures);
+            std::cout << creatures.size() << std::endl;
         }
         for (auto& c : creatures)
         {

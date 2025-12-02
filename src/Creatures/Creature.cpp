@@ -82,75 +82,12 @@ void Creature::update(float time, std::vector<std::unique_ptr<Creature>>& creatu
     m_Body[0].updateHead(m_Body[0], time);
 
 
-    for (auto& c : creatures)
-{
-    switch (m_CreatureType)
-    {
-    case CreatureType::Predator:
-    {
-        if (c->getCreatureType() == CreatureType::Vegan)
-        {
-            setDesiredPosition(c->m_Body[0].getPosition());
-        }
-        break;
-    }
-    case CreatureType::Vegan:
-    {
-        if (c->getCreatureType() == CreatureType::Fruit)
-        {
-            setDesiredPosition(c->m_Body[0].getPosition());
-        }
-        if (c->getCreatureType() == CreatureType::Predator)
-        {
-            //toDo
-            //delete vegan 
-        }
-        break;
-    }
-    }
-}
-
     for (size_t i = 1; i < m_Body.size(); ++i)
     {
         m_Body[i].setDesiredPosition(m_Body[i - 1].getChildDesiredPosition());
         m_Body[i].updateBody(m_Body[i-1], time);
     }
 }
-
-//for (auto& c : creatures)
-//{
-//    switch (m_CreatureType)
-//    {
-//    case CreatureType::Predator:
-//    {
-//        if (c->getCreatureType() == CreatureType::Vegan)
-//        {
-//            setDesiredPosition(c->m_Body[0].getPosition());
-//        }
-//        break;
-//    }
-//    case CreatureType::Vegan:
-//    {
-//        if (c->getCreatureType() == CreatureType::Fruit)
-//        {
-//            setDesiredPosition(c->m_Body[0].getPosition());
-//        }
-//        if (c->getCreatureType() == CreatureType::Predator)
-//        {
-//            //toDo
-//            //delete vegan 
-//        }
-//        break;
-//    }
-//    case CreatureType::Fruit:
-//    {
-//        //toDo
-//        //delete Fruit
-//        break;
-//    }
-//    }
-//}
-
 
 
 CreatureType Creature::getCreatureType() 
@@ -168,4 +105,31 @@ bool Creature::getIsDead()
 void Creature::setIsDead(bool isDead)
 {
     bIsDead = isDead;
+}
+
+
+bool Creature::getIsFed()
+{
+    return bIsFed;
+}
+
+
+void Creature::setIsFed(bool isFed)
+{
+    bIsFed = isFed;
+}
+
+
+
+float Creature::getDistanceTo(Creature* creature)
+{
+    sf::Vector2f otherCreaturePosition = creature->m_Body[0].getPosition();
+    sf::Vector2f thisCreaturePosition = m_Body[0].getPosition();
+
+    float deltaX = otherCreaturePosition.x - thisCreaturePosition.x;
+    float deltaY = otherCreaturePosition.y - thisCreaturePosition.y;
+    float distance = std::sqrt((deltaX * deltaX) + (deltaY * deltaY));
+
+
+    return distance;
 }
