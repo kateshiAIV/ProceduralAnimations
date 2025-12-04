@@ -19,20 +19,34 @@ void VeganCreature::update(float time, std::vector<std::unique_ptr<Creature>>& c
     for (size_t i = 0; i < creatures.size(); ++i)
     {
         Creature* c = creatures[i].get();
-
         if (c == this) continue;
-        if (c->getCreatureType() != CreatureType::Predator) continue;
-
-        sf::Vector2f predatorPos = c->m_Body[0].getPosition();
-        float predatorR = c->m_Body[0].getRadius();
-
-        float dx = veganPos.x - predatorPos.x;
-        float dy = veganPos.y - predatorPos.y;
+        sf::Vector2f otherCreaturePos = c->m_Body[0].getPosition();
+        float otherCreatureR = c->m_Body[0].getRadius();
+        float dx = veganPos.x - otherCreaturePos.x;
+        float dy = veganPos.y - otherCreaturePos.y;
         float distance = std::sqrt(dx * dx + dy * dy);
-
-        if (distance < veganR + predatorR)
+        if (c->getCreatureType() == CreatureType::Vegan)
         {
-            setIsDead(true);
+            if (c->getIsFed() && getIsFed())
+            {
+                if (distance < veganR + otherCreatureR)
+                {
+                    setIsFed(false);
+                    c->setIsFed(false);
+                    creatures.push_back(std::make_unique<VeganCreature>(
+                        this->m_Body[0].getPosition().x,
+                        this->m_Body[0].getPosition().y,
+                        CreatureType::Vegan
+                    ));
+                }
+            }
+        }
+        if (c->getCreatureType() == CreatureType::Predator)
+        {
+            if (distance < veganR + otherCreatureR)
+            {
+                setIsDead(true);
+            }
         }
     }
 
@@ -57,19 +71,24 @@ void VeganCreature::update(float time, std::vector<std::unique_ptr<Creature>>& c
         {
             if ((c->getCreatureType() == CreatureType::Vegan) && (c->getIsFed())) 
             {
-                setDesiredPosition(c->m_Body[0].getPosition());
-                break;
+                float distanceToCreature = c->getDistanceTo(this);
+                if (distanceToCreature < minDistanceToPrey)
+                {
+                    minDistanceToPrey = distanceToCreature;
+                    setDesiredPosition(c->m_Body[0].getPosition());
+                }
+                
             }
         }
         else 
         {
             if (c->getCreatureType() == CreatureType::Fruit)
             {
-                float distance1 = c->getDistanceTo(this);
-                std::cout << distance1 << std::endl;
-                if (distance1 < minDistanceToPrey)
+                float distanceToCreature = c->getDistanceTo(this);
+                std::cout << distanceToCreature << std::endl;
+                if (distanceToCreature < minDistanceToPrey)
                 {
-                    minDistanceToPrey = distance1;
+                    minDistanceToPrey = distanceToCreature;
                     setDesiredPosition(c->m_Body[0].getPosition());
                 }
             }
