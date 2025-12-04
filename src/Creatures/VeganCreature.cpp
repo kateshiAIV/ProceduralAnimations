@@ -46,30 +46,13 @@ void VeganCreature::update(float time, std::vector<std::unique_ptr<Creature>>& c
             if (distance < veganR + otherCreatureR)
             {
                 setIsDead(true);
+                c->setIsFed(true);
             }
         }
-    }
-
-    float minDistanceToPrey = 1000000.0f;
-
-    for (size_t i = 0; i < creatures.size(); ++i)
-    {
-
-        Creature* c = creatures[i].get();
-        if (c == this) continue;
-
-        if (c->getCreatureType() == CreatureType::Predator)
-        {
-            float distance = c->getDistanceTo(this);
-            std::cout << distance << std::endl;
-        }
-
-
-
-
+        float minDistanceToPrey = 1000000.0f;
         if (getIsFed())
         {
-            if ((c->getCreatureType() == CreatureType::Vegan) && (c->getIsFed())) 
+            if ((c->getCreatureType() == CreatureType::Vegan) && (c->getIsFed()))
             {
                 float distanceToCreature = c->getDistanceTo(this);
                 if (distanceToCreature < minDistanceToPrey)
@@ -77,10 +60,10 @@ void VeganCreature::update(float time, std::vector<std::unique_ptr<Creature>>& c
                     minDistanceToPrey = distanceToCreature;
                     setDesiredPosition(c->m_Body[0].getPosition());
                 }
-                
+
             }
         }
-        else 
+        else
         {
             if (c->getCreatureType() == CreatureType::Fruit)
             {
@@ -93,7 +76,6 @@ void VeganCreature::update(float time, std::vector<std::unique_ptr<Creature>>& c
                 }
             }
         }
+
     }
-
-
 }
