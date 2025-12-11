@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "Creatures/Segment.h"
 #include "Creatures/Creature.h"
 #include "Creatures/PredatorCreature.h"
@@ -6,11 +7,17 @@
 #include "Creatures/FruitCreature.h"
 #include "QuickMenu.h"
 #include <iostream>
+#include <fstream>
+#include <sstream>
 
 
 int main()
 {
 
+
+    sf::SoundBuffer soundBuffer;
+    soundBuffer.loadFromFile("space.mp3");
+    sf::Sound soundChop(soundBuffer);
 
     std::vector<std::unique_ptr<Creature>> creatures;
 
