@@ -17,7 +17,11 @@ int main()
 
     sf::SoundBuffer soundBuffer;
     soundBuffer.loadFromFile("space.mp3");
-    sf::Sound soundChop(soundBuffer);
+    sf::Sound sound(soundBuffer);
+	sound.play();
+    sound.setLooping(true);
+
+
 
     std::vector<std::unique_ptr<Creature>> creatures;
 
@@ -26,7 +30,7 @@ int main()
 	sf::Clock clock;
 
     sf::View view = window.getDefaultView();
-    view.zoom(1.0f); 
+    view.zoom(2.0f); 
     window.setView(view);
 
 
@@ -58,13 +62,13 @@ int main()
                 if (mousePressed->button == sf::Mouse::Button::Left)
                 {
 
-                    sf::Vector2f mousePos(
-                        static_cast<float>(mousePressed->position.x),
-                        static_cast<float>(mousePressed->position.y)
+                    sf::Vector2f mousePos = window.mapPixelToCoords(
+                        sf::Vector2i(mousePressed->position.x, mousePressed->position.y)
                     );
 
+
                     if (!menu.isVisible()) {
-                        menu.setPosition(sf::Vector2f(static_cast<float>(mousePressed->position.x)-80.0f, static_cast<float>(mousePressed->position.y)-80.0f));
+                        menu.setPosition(sf::Vector2f(mousePos.x-80.0f, mousePos.y-80.0f));
                         menu.show();
                     }
                     else {
