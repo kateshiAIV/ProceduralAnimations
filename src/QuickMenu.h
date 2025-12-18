@@ -12,6 +12,7 @@ private:
     std::vector<sf::Text> labels;
     sf::Font font;
     bool visible = false;
+    float currentScaling = 4.0f;
 
 public:
     QuickMenu();
@@ -21,4 +22,6 @@ public:
     void show();
     void hide();
     bool isVisible() const;
+    void setScaling(float currentScaling);
+    void rebuild();
 };

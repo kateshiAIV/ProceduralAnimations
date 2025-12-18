@@ -8,34 +8,67 @@ QuickMenu::QuickMenu()
 
     std::vector<std::string> options = { "predator", "vegan", "fruit", "close" };
 
-    float width = 160.f;
-    float height = 40.f;
-    float spacing = 5.f;
+    float width = 160.f * currentScaling;
+    float height = 40.f * currentScaling;
+    float spacing = 5.f * currentScaling;
 
     for (size_t i = 0; i < options.size(); ++i)
     {
         sf::RectangleShape rect({ width, height });
         rect.setFillColor(sf::Color(70, 70, 70, 230));
         rect.setOutlineColor(sf::Color::White);
-        rect.setOutlineThickness(1.f);
+        rect.setOutlineThickness(1.f*currentScaling);
         buttons.push_back(rect);
 
-        sf::Text text(font, "", 30);
+        sf::Text text(font, "", 30*currentScaling);
         text.setFont(font);
         text.setString(options[i]);
-        text.setCharacterSize(20);
+        text.setCharacterSize(20*currentScaling);
         text.setFillColor(sf::Color::White);
         labels.push_back(text);
     }
 }
+
+void QuickMenu::rebuild()
+{
+    float width = 160.f * currentScaling;
+    float height = 40.f * currentScaling;
+    float spacing = 5.f * currentScaling;
+
+
+    //todo
+    for (size_t i = 0; i < buttons.size(); ++i)
+    {
+        buttons[i].getTextureRect().
+    }
+
+    for (size_t i = 0; i < options.size(); ++i)
+    {
+        sf::RectangleShape rect({ width, height });
+        rect.setFillColor(sf::Color(70, 70, 70, 230));
+        rect.setOutlineColor(sf::Color::White);
+        rect.setOutlineThickness(1.f*currentScaling);
+        buttons.push_back(rect);
+
+        sf::Text text(font, "", 30*currentScaling);
+        text.setFont(font);
+        text.setString(options[i]);
+        text.setCharacterSize(20*currentScaling);
+        text.setFillColor(sf::Color::White);
+        labels.push_back(text);
+    }
+}
+
+
+
 
 void QuickMenu::setPosition(const sf::Vector2f& pos)
 {
     position = pos;
     for (size_t i = 0; i < buttons.size(); ++i)
     {
-        buttons[i].setPosition(sf::Vector2f(pos.x, pos.y + i * 45.f));
-        labels[i].setPosition(sf::Vector2f(pos.x + 10.f, pos.y + i * 45.f + 8.f));
+        buttons[i].setPosition(sf::Vector2f(pos.x, pos.y + i * (45.f * currentScaling)));
+        labels[i].setPosition(sf::Vector2f(pos.x + 10.f, pos.y + i * (45.f*currentScaling) + (8.f*currentScaling)));
     }
 }
 
@@ -79,6 +112,11 @@ CreatureType QuickMenu::handleClick(const sf::Vector2f& mousePos)
         }
     }
 	return CreatureType::None;
+}
+
+void QuickMenu::setScaling(float currentScaling)
+{
+    this->currentScaling = currentScaling;
 }
 
 void QuickMenu::show()

@@ -60,8 +60,12 @@ int main()
             if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>();
                 keyPressed && keyPressed->code == sf::Keyboard::Key::Down)
             {
-                viewScale = 1.25f;
-                view.zoom(viewScale);
+                menu.hide();
+                float newViewScale = 1.25f;
+                view.zoom(newViewScale);
+                viewScale *= newViewScale;
+                menu.setScaling(viewScale);
+                menu.rebuild();
                 window.setView(view);
             }
 
@@ -70,8 +74,12 @@ int main()
             if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>();
                 keyPressed && keyPressed->code == sf::Keyboard::Key::Up)
             {
-                viewScale = 0.8f;
-                view.zoom(viewScale);
+                menu.hide();
+                float newViewScale = 0.8f;
+                view.zoom(newViewScale);
+                viewScale *= newViewScale;
+                menu.setScaling(viewScale);
+                menu.rebuild();
                 window.setView(view);
             }
 
