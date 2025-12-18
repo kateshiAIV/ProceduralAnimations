@@ -15,6 +15,8 @@ int main()
 {
 
 
+    float viewScale = 4.0f;
+
     sf::SoundBuffer soundBuffer;
     soundBuffer.loadFromFile("space.mp3");
     sf::Sound sound(soundBuffer);
@@ -30,7 +32,7 @@ int main()
 	sf::Clock clock;
 
     sf::View view = window.getDefaultView();
-    view.zoom(2.0f); 
+    view.zoom(viewScale); 
     window.setView(view);
 
 
@@ -54,6 +56,24 @@ int main()
                 window.close();
             }
 
+            // Down pressed: scale up
+            if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>();
+                keyPressed && keyPressed->code == sf::Keyboard::Key::Down)
+            {
+                viewScale = 1.25f;
+                view.zoom(viewScale);
+                window.setView(view);
+            }
+
+
+            // Up pressed: scale down
+            if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>();
+                keyPressed && keyPressed->code == sf::Keyboard::Key::Up)
+            {
+                viewScale = 0.8f;
+                view.zoom(viewScale);
+                window.setView(view);
+            }
 
 
             // left mouse button pressed: creature menu
