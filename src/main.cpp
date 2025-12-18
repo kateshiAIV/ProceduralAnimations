@@ -103,24 +103,24 @@ int main()
                         if (menu.handleClick(mousePos) == CreatureType::Predator)
                         {
                             creatures.push_back(std::make_unique<PredatorCreature>(
-                                mousePressed->position.x,
-                                mousePressed->position.y,
+                                mousePos.x,
+                                mousePos.y,
                                 CreatureType::Predator
                             ));
                         }
                         else if (menu.handleClick(mousePos) == CreatureType::Vegan)
                         {
                             creatures.push_back(std::make_unique<VeganCreature>(
-                                mousePressed->position.x,
-                                mousePressed->position.y,
+                                mousePos.x,
+                                mousePos.y,
                                 CreatureType::Vegan
                             ));
                         }
                         else if (menu.handleClick(mousePos) == CreatureType::Fruit)
                         {
                             creatures.push_back(std::make_unique<FruitCreature>(
-                                mousePressed->position.x,
-                                mousePressed->position.y,
+                                mousePos.x,
+                                mousePos.y,
                                 CreatureType::Fruit
                             ));
                         }
@@ -149,11 +149,13 @@ int main()
 
         float time = clock.getElapsedTime().asSeconds();
 
-
-
 		window.clear();
         for (auto& c : creatures)
         {
+
+            //ToDo
+            /*Exception thrown : read access violation.
+                c._Mypair.** _Myval2** was 0xFFFFFFFFFFFFFFFF.*/
 			c->update(time, creatures);
             std::cout << creatures.size() << std::endl;
         }

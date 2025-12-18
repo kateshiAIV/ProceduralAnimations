@@ -20,7 +20,7 @@ void PredatorCreature::update(float time, std::vector<std::unique_ptr<Creature>>
 	{
 
         Creature* c = creatures[i].get();
-        if (c == this) continue;
+        if (c == this || c->getCreatureType() == CreatureType::Fruit) continue;
         sf::Vector2f otherCreaturePos = c->m_Body[0].getPosition();
         float otherCreatureR = c->m_Body[0].getRadius();
         float dx = predatorPos.x - otherCreaturePos.x;
@@ -42,7 +42,6 @@ void PredatorCreature::update(float time, std::vector<std::unique_ptr<Creature>>
                 }
             }
         }
-        float minDistanceToPrey = 1000000.0f;
         if (getIsFed())
         {
             if ((c->getCreatureType() == CreatureType::Predator) && (c->getIsFed()))

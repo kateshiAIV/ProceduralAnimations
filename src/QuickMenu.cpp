@@ -31,29 +31,27 @@ QuickMenu::QuickMenu()
 
 void QuickMenu::rebuild()
 {
+    std::vector<std::string> options = { "predator", "vegan", "fruit", "close" };
+
     float width = 160.f * currentScaling;
     float height = 40.f * currentScaling;
     float spacing = 5.f * currentScaling;
 
-
-    //todo
-    for (size_t i = 0; i < buttons.size(); ++i)
-    {
-        buttons[i].getTextureRect().
-    }
+    buttons.clear();
+    labels.clear();
 
     for (size_t i = 0; i < options.size(); ++i)
     {
         sf::RectangleShape rect({ width, height });
         rect.setFillColor(sf::Color(70, 70, 70, 230));
         rect.setOutlineColor(sf::Color::White);
-        rect.setOutlineThickness(1.f*currentScaling);
+        rect.setOutlineThickness(1.f * currentScaling);
         buttons.push_back(rect);
 
-        sf::Text text(font, "", 30*currentScaling);
+        sf::Text text(font, "", 30 * currentScaling);
         text.setFont(font);
         text.setString(options[i]);
-        text.setCharacterSize(20*currentScaling);
+        text.setCharacterSize(20 * currentScaling);
         text.setFillColor(sf::Color::White);
         labels.push_back(text);
     }

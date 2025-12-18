@@ -16,6 +16,7 @@ void VeganCreature::update(float time, std::vector<std::unique_ptr<Creature>>& c
     sf::Vector2f veganPos = m_Body[0].getPosition();
     float veganR = m_Body[0].getRadius();
 
+    float minDistanceToPrey = 1000000.0f;
     for (size_t i = 0; i < creatures.size(); ++i)
     {
         Creature* c = creatures[i].get();
@@ -49,7 +50,6 @@ void VeganCreature::update(float time, std::vector<std::unique_ptr<Creature>>& c
                 c->setIsFed(true);
             }
         }
-        float minDistanceToPrey = 1000000.0f;
         if (getIsFed())
         {
             if ((c->getCreatureType() == CreatureType::Vegan) && (c->getIsFed()))
