@@ -1,4 +1,4 @@
-#include <SFML/Graphics.hpp>
+﻿#include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include "Creatures/Segment.h"
 #include "Creatures/Creature.h"
@@ -9,148 +9,79 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-
+#include <memory>
+#include <vector>
+#include <algorithm>
 
 int main()
 {
+    sf::RenderWindow window(sf::VideoMode({ 3840, 2160 }), "CMake SFML Project");
+    window.setFramerateLimit(144);
+
+
+
+    //Clocks
     sf::Clock clock;
+    sf::Clock cameraClock;
 
+
+	//Camera settings
     float viewScale = 4.0f;
-	float viewSpeed = 100.0f;
-	float dt = clock.restart().asSeconds();
+    float viewSpeed = 1000.0f;
+    sf::View view = window.getDefaultView();
+    view.zoom(viewScale);
+    window.setView(view);
 
+	//Background music
     sf::SoundBuffer soundBuffer;
     soundBuffer.loadFromFile("space.mp3");
     sf::Sound sound(soundBuffer);
-	sound.play();
     sound.setLooping(true);
+    sound.play();
 
-
-
-    std::vector<std::unique_ptr<Creature>> creatures;
-
-    auto window = sf::RenderWindow(sf::VideoMode({3840u, 2160u}), "CMake SFML Project");
-    window.setFramerateLimit(144);
-
-    sf::View view = window.getDefaultView();
-    view.zoom(viewScale); 
-    window.setView(view);
-
-
+	//menu and creatures
     QuickMenu menu;
+    std::vector<std::unique_ptr<Creature>> creatures;
 
     while (window.isOpen())
     {
-        // Process events
+        float dt = cameraClock.restart().asSeconds();
+
+        //EVENTS
         while (const auto event = window.pollEvent())
         {
-            // Close window: exit
             if (event->is<sf::Event::Closed>())
-            {
                 window.close();
-            }
-            // Escape pressed: exit
-            if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>();
-                keyPressed && keyPressed->code == sf::Keyboard::Key::Escape)
+
+            if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
             {
-                window.close();
-            }
-            // Down pressed: scale up
-            if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>();
-                keyPressed && keyPressed->code == sf::Keyboard::Key::Down)
-            {
-                menu.hide();
-                float newViewScale = 1.25f;
-                view.zoom(newViewScale);
-                viewScale *= newViewScale;
-                menu.setScaling(viewScale);
-                menu.rebuild();
-                window.setView(view);
-            }
-            // Up pressed: scale down
-            if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>();
-                keyPressed && keyPressed->code == sf::Keyboard::Key::Up)
-            {
-                menu.hide();
-                float newViewScale = 0.8f;
-                view.zoom(newViewScale);
-                viewScale *= newViewScale;
-                menu.setScaling(viewScale);
-                menu.rebuild();
-                window.setView(view);
+                if (keyPressed->code == sf::Keyboard::Key::Escape)
+                    window.close();
             }
 
-			// A pressed: move left
-            if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>();
-                keyPressed && keyPressed->code == sf::Keyboard::Key::A)
-            {
-                view.move(sf::Vector2f(-viewSpeed, 0));
-                window.setView(view);
-            }
-            // D pressed: move right
-            if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>();
-                keyPressed && keyPressed->code == sf::Keyboard::Key::D)
-            {
-                view.move(sf::Vector2f(viewSpeed, 0));
-                window.setView(view);
-            }
-            // A pressed: move left
-            if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>();
-                keyPressed && keyPressed->code == sf::Keyboard::Key::W)
-            {
-                view.move(sf::Vector2f(0, -viewSpeed));
-                window.setView(view);
-            }
-            // A pressed: move left
-            if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>();
-                keyPressed && keyPressed->code == sf::Keyboard::Key::S)
-            {
-                view.move(sf::Vector2f(0, viewSpeed));
-                window.setView(view);
-            }
-
-
-            // left mouse button pressed: creature menu
+			//MENU AND CREATURE SPAWN
             if (const auto* mousePressed = event->getIf<sf::Event::MouseButtonPressed>())
             {
                 if (mousePressed->button == sf::Mouse::Button::Left)
                 {
-
                     sf::Vector2f mousePos = window.mapPixelToCoords(
                         sf::Vector2i(mousePressed->position.x, mousePressed->position.y)
                     );
 
-
-                    if (!menu.isVisible()) {
-                        menu.setPosition(sf::Vector2f(mousePos.x-80.0f, mousePos.y-80.0f));
+                    if (!menu.isVisible())
+                    {
+                        menu.setPosition(sf::Vector2f(mousePos.x - 80.f, mousePos.y - 80.f));
                         menu.show();
                     }
-                    else {
-                        if (menu.handleClick(mousePos) == CreatureType::Predator)
-                        {
-                            creatures.push_back(std::make_unique<PredatorCreature>(
-                                mousePos.x,
-                                mousePos.y,
-                                CreatureType::Predator
-                            ));
-                        }
-                        else if (menu.handleClick(mousePos) == CreatureType::Vegan)
-                        {
-                            creatures.push_back(std::make_unique<VeganCreature>(
-                                mousePos.x,
-                                mousePos.y,
-                                CreatureType::Vegan
-                            ));
-                        }
-                        else if (menu.handleClick(mousePos) == CreatureType::Fruit)
-                        {
-                            creatures.push_back(std::make_unique<FruitCreature>(
-                                mousePos.x,
-                                mousePos.y,
-                                CreatureType::Fruit
-                            ));
-                        }
-
+                    else
+                    {
+                        CreatureType type = menu.handleClick(mousePos);
+                        if (type == CreatureType::Predator)
+                            creatures.push_back(std::make_unique<PredatorCreature>(mousePos.x, mousePos.y, type));
+                        else if (type == CreatureType::Vegan)
+                            creatures.push_back(std::make_unique<VeganCreature>(mousePos.x, mousePos.y, type));
+                        else if (type == CreatureType::Fruit)
+                            creatures.push_back(std::make_unique<FruitCreature>(mousePos.x, mousePos.y, type));
 
                         menu.setPosition(mousePos);
                         menu.hide();
@@ -159,52 +90,137 @@ int main()
             }
 
 
-            if (const auto* mouseMoved = event->getIf<sf::Event::MouseMoved>())
+            ////ZOOM IN
+            //if (keyPressed->code == sf::Mouse::Wheel)
+            //{
+            //    menu.hide();
+            //    float zoomFactor = 0.8f;
+
+            //    sf::Vector2i pixel = sf::Mouse::getPosition(window);
+            //    sf::Vector2f beforeZoom = window.mapPixelToCoords(pixel);
+
+            //    view.zoom(zoomFactor);
+            //    viewScale *= zoomFactor;
+
+            //    sf::Vector2f afterZoom = window.mapPixelToCoords(pixel);
+            //    view.move(beforeZoom - afterZoom);
+
+            //    menu.setScaling(viewScale);
+            //    menu.rebuild();
+            //    window.setView(view);
+            //}
+
+            ////ZOOM OUT
+            //if (keyPressed->code == sf::Keyboard::Key::Down)
+            //{
+            //    menu.hide();
+            //    float zoomFactor = 1.25f;
+
+            //    sf::Vector2i pixel = sf::Mouse::getPosition(window);
+            //    sf::Vector2f beforeZoom = window.mapPixelToCoords(pixel);
+
+            //    view.zoom(zoomFactor);
+            //    viewScale *= zoomFactor;
+
+            //    sf::Vector2f afterZoom = window.mapPixelToCoords(pixel);
+            //    view.move(beforeZoom - afterZoom);
+
+            //    menu.setScaling(viewScale);
+            //    menu.rebuild();
+            //    window.setView(view);
+            //}
+
+            if (const auto* mouseWheelScrolled = event->getIf<sf::Event::MouseWheelScrolled>())
             {
 
-                for (auto& c : creatures)
+                std::cout << "wheel movement: " << mouseWheelScrolled->delta << std::endl;
+                if (mouseWheelScrolled->delta == 1)
                 {
-                    if (c->getCreatureType() == CreatureType::Fruit)
-                    {
-                        c->setDesiredPosition(sf::Vector2f(static_cast<float>(mouseMoved->position.x), static_cast<float>(mouseMoved->position.y)));
-                    }
+                    menu.hide();
+                    float zoomFactor = 0.8f;
+
+                    sf::Vector2i pixel = sf::Mouse::getPosition(window);
+                    sf::Vector2f beforeZoom = window.mapPixelToCoords(pixel);
+
+                    view.zoom(zoomFactor);
+                    viewScale *= zoomFactor;
+
+                    sf::Vector2f afterZoom = window.mapPixelToCoords(pixel);
+                    view.move(beforeZoom - afterZoom);
+
+                    menu.setScaling(viewScale);
+                    menu.rebuild();
+                    window.setView(view);
                 }
-            
+				else if (mouseWheelScrolled->delta == -1)
+                {
+                    menu.hide();
+                    float zoomFactor = 1.25f;
+
+                    sf::Vector2i pixel = sf::Mouse::getPosition(window);
+                    sf::Vector2f beforeZoom = window.mapPixelToCoords(pixel);
+
+                    view.zoom(zoomFactor);
+                    viewScale *= zoomFactor;
+
+                    sf::Vector2f afterZoom = window.mapPixelToCoords(pixel);
+                    view.move(beforeZoom - afterZoom);
+
+                    menu.setScaling(viewScale);
+                    menu.rebuild();
+                    window.setView(view);
+                }
+            }
+
+
+        }
+
+        //CAMERA MOVE
+        sf::Vector2f camMove(0.f, 0.f);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) camMove.x -= viewSpeed * dt;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) camMove.x += viewSpeed * dt;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) camMove.y -= viewSpeed * dt;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) camMove.y += viewSpeed * dt;
+        view.move(camMove);
+
+		// FRUIT FOLLOW MOUSE, TODO: AI
+        sf::Vector2i mousePixel = sf::Mouse::getPosition(window);
+        sf::Vector2f mouseWorld = window.mapPixelToCoords(mousePixel);
+
+        for (auto& c : creatures)
+        {
+            if (c->getCreatureType() == CreatureType::Fruit)
+            {
+                c->setDesiredPosition(mouseWorld);
             }
         }
 
+        window.setView(view);
+
+        //UPDATE CREATURES 
         float time = clock.getElapsedTime().asSeconds();
+        for (auto& c : creatures)
+        {
+            c->update(time, creatures);
+        }
 
-		window.clear();
-        for (auto& c : creatures)
-        {
+        //RENDER 
+        window.clear();
 
-            //ToDo
-            /*Exception thrown : read access violation.
-                c._Mypair.** _Myval2** was 0xFFFFFFFFFFFFFFFF.*/
-			c->update(time, creatures);
-        }
         for (auto& c : creatures)
-        {
-            if(c->getCreatureType() == CreatureType::Fruit) c->draw(window);
-        }
+            if (c->getCreatureType() == CreatureType::Fruit) c->draw(window);
         for (auto& c : creatures)
-        {
-            if(c->getCreatureType() == CreatureType::Vegan) c->draw(window);
-        }
+            if (c->getCreatureType() == CreatureType::Vegan) c->draw(window);
         for (auto& c : creatures)
-        {
-            if(c->getCreatureType() == CreatureType::Predator) c->draw(window);
-        }
+            if (c->getCreatureType() == CreatureType::Predator) c->draw(window);
+
+        //REMOVE DEAD
         creatures.erase(
-            std::remove_if(
-                creatures.begin(),
-                creatures.end(),
-                [](auto& c) { return c->getIsDead(); }
-            ),
+            std::remove_if(creatures.begin(), creatures.end(),
+                [](auto& c) { return c->getIsDead(); }),
             creatures.end()
         );
-        
+
         menu.draw(window);
         window.display();
     }

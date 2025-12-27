@@ -10,6 +10,7 @@ enum class CreatureType
 	Predator,
 	Vegan,
 	Fruit,
+	Bush,
 	None
 };
 
