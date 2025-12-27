@@ -157,7 +157,6 @@ int main()
             /*Exception thrown : read access violation.
                 c._Mypair.** _Myval2** was 0xFFFFFFFFFFFFFFFF.*/
 			c->update(time, creatures);
-            std::cout << creatures.size() << std::endl;
         }
         for (auto& c : creatures)
         {

@@ -123,13 +123,14 @@ void Creature::setIsFed(bool isFed)
 
 float Creature::getDistanceTo(Creature* creature)
 {
-    sf::Vector2f otherCreaturePosition = creature->m_Body[0].getPosition();
-    sf::Vector2f thisCreaturePosition = m_Body[0].getPosition();
+    if (!creature) return FLT_MAX;
+    if (creature == this) return FLT_MAX;
+    if (creature->m_Body.empty() || m_Body.empty()) return FLT_MAX;
 
-    float deltaX = otherCreaturePosition.x - thisCreaturePosition.x;
-    float deltaY = otherCreaturePosition.y - thisCreaturePosition.y;
-    float distance = std::sqrt((deltaX * deltaX) + (deltaY * deltaY));
+    sf::Vector2f other = creature->m_Body[0].getPosition();
+    sf::Vector2f self = m_Body[0].getPosition();
 
-
-    return distance;
+    float dx = other.x - self.x;
+    float dy = other.y - self.y;
+    return std::sqrt(dx * dx + dy * dy);
 }
