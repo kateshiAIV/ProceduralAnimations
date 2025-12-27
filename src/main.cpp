@@ -13,9 +13,11 @@
 
 int main()
 {
-
+    sf::Clock clock;
 
     float viewScale = 4.0f;
+	float viewSpeed = 100.0f;
+	float dt = clock.restart().asSeconds();
 
     sf::SoundBuffer soundBuffer;
     soundBuffer.loadFromFile("space.mp3");
@@ -29,7 +31,6 @@ int main()
 
     auto window = sf::RenderWindow(sf::VideoMode({3840u, 2160u}), "CMake SFML Project");
     window.setFramerateLimit(144);
-	sf::Clock clock;
 
     sf::View view = window.getDefaultView();
     view.zoom(viewScale); 
@@ -48,14 +49,12 @@ int main()
             {
                 window.close();
             }
-
             // Escape pressed: exit
             if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>();
                 keyPressed && keyPressed->code == sf::Keyboard::Key::Escape)
             {
                 window.close();
             }
-
             // Down pressed: scale up
             if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>();
                 keyPressed && keyPressed->code == sf::Keyboard::Key::Down)
@@ -68,8 +67,6 @@ int main()
                 menu.rebuild();
                 window.setView(view);
             }
-
-
             // Up pressed: scale down
             if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>();
                 keyPressed && keyPressed->code == sf::Keyboard::Key::Up)
@@ -80,6 +77,35 @@ int main()
                 viewScale *= newViewScale;
                 menu.setScaling(viewScale);
                 menu.rebuild();
+                window.setView(view);
+            }
+
+			// A pressed: move left
+            if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>();
+                keyPressed && keyPressed->code == sf::Keyboard::Key::A)
+            {
+                view.move(sf::Vector2f(-viewSpeed, 0));
+                window.setView(view);
+            }
+            // D pressed: move right
+            if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>();
+                keyPressed && keyPressed->code == sf::Keyboard::Key::D)
+            {
+                view.move(sf::Vector2f(viewSpeed, 0));
+                window.setView(view);
+            }
+            // A pressed: move left
+            if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>();
+                keyPressed && keyPressed->code == sf::Keyboard::Key::W)
+            {
+                view.move(sf::Vector2f(0, -viewSpeed));
+                window.setView(view);
+            }
+            // A pressed: move left
+            if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>();
+                keyPressed && keyPressed->code == sf::Keyboard::Key::S)
+            {
+                view.move(sf::Vector2f(0, viewSpeed));
                 window.setView(view);
             }
 
