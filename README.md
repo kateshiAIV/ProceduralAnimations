@@ -1,4 +1,4 @@
-SHOWCASE (https://www.youtube.com/watch?v=WORm_W5p2yw)
+SHOWCASE (https://www.youtube.com/watch?v=shfq3lXRWgg)
 
 The idea was to simulate a flexible, worm- or snake-like creature made up of connected body segments that respond dynamically to mouse movement — creating smooth, lifelike motion without relying on a physics engine.
 
