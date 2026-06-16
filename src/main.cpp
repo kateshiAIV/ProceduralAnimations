@@ -18,8 +18,6 @@ int main()
     sf::RenderWindow window(sf::VideoMode({ 3840, 2160 }), "CMake SFML Project");
     window.setFramerateLimit(144);
 
-
-
     //Clocks
     sf::Clock clock;
     sf::Clock cameraClock;
@@ -88,47 +86,6 @@ int main()
                     }
                 }
             }
-
-
-            ////ZOOM IN
-            //if (keyPressed->code == sf::Mouse::Wheel)
-            //{
-            //    menu.hide();
-            //    float zoomFactor = 0.8f;
-
-            //    sf::Vector2i pixel = sf::Mouse::getPosition(window);
-            //    sf::Vector2f beforeZoom = window.mapPixelToCoords(pixel);
-
-            //    view.zoom(zoomFactor);
-            //    viewScale *= zoomFactor;
-
-            //    sf::Vector2f afterZoom = window.mapPixelToCoords(pixel);
-            //    view.move(beforeZoom - afterZoom);
-
-            //    menu.setScaling(viewScale);
-            //    menu.rebuild();
-            //    window.setView(view);
-            //}
-
-            ////ZOOM OUT
-            //if (keyPressed->code == sf::Keyboard::Key::Down)
-            //{
-            //    menu.hide();
-            //    float zoomFactor = 1.25f;
-
-            //    sf::Vector2i pixel = sf::Mouse::getPosition(window);
-            //    sf::Vector2f beforeZoom = window.mapPixelToCoords(pixel);
-
-            //    view.zoom(zoomFactor);
-            //    viewScale *= zoomFactor;
-
-            //    sf::Vector2f afterZoom = window.mapPixelToCoords(pixel);
-            //    view.move(beforeZoom - afterZoom);
-
-            //    menu.setScaling(viewScale);
-            //    menu.rebuild();
-            //    window.setView(view);
-            //}
 
             if (const auto* mouseWheelScrolled = event->getIf<sf::Event::MouseWheelScrolled>())
             {
